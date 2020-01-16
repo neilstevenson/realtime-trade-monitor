@@ -1,11 +1,15 @@
 hazelcast:
-#  license-key:
+  license-key: '0TAOEW85umyXP9iBkGg1ZUJKj2qMbHdwNYln6SQfCD18110100090011196101002001001111010401092000'
   group:
     name: jet
   properties:
     hazelcast.wait.seconds.before.join: 0
     hazelcast.logging.type: log4j
     hazelcast.jmx: true
+  management-center:
+    scripting-enabled: true
+    enabled: true
+    url: http://localhost:8080/hazelcast-mancenter
   network:
     rest-api:
       enabled: true
@@ -32,17 +36,17 @@ hazelcast:
 #      value: 16384
   map:
     trades:
-#      hot-restart:
-#        enabled: true
+      hot-restart:
+        enabled: true
       in-memory-format: BINARY
       indexes:
         symbol:
           ordered: false
     symbols:
       in-memory-format: BINARY
-#      hot-restart:
-#        enabled: true
+      hot-restart:
+        enabled: true
     query1_Results:
-#      hot-restart:
-#        enabled: true
+      hot-restart:
+        enabled: true
       in-memory-format: BINARY

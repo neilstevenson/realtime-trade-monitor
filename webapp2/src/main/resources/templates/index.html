@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head" />
+
+<body>
+	<div th:include="fragments :: header">?</div>
+
+	<div class="mainpane">
+
+		<h1>Counterparties</h1>
+
+		<div th:if="${data.isEmpty()}">
+     		<h2 style="color: teal;">No counterparties</h2>
+		</div>
+
+		<table th:unless="${data.isEmpty()}" class="myData">
+			<tr>
+				<th>Counterparty</th>
+				<th>:</th>
+				<th>Number of Trades</th>
+				<th>:</th>
+				<th>Volume of Trades</th>
+				<th>:</th>
+				<th>More...</th>
+			</tr>
+			<tr th:each="datum : ${data}">
+				<td th:text="${datum.get(0)}"/>
+				<td>&nbsp;</td>
+				<td th:text="${datum.get(1)}"/>
+				<td>&nbsp;</td>
+				<td th:text="${datum.get(2)}"/>
+				<td>&nbsp;</td>
+				<td align="center">
+					<form th:action="@{/index2}">
+    	            		<input type="hidden" name="j_counterparty_name" th:value="${datum.get(0)}"/>
+    	            		<input type="hidden" name="j_counterparty_timestamp" th:value="${datum.get(3)}"/>
+            	        	<input class="mySubmit" type="submit" th:value="View"/>
+          			</form>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+
+	<div th:include="fragments :: footer">?</div>
+</body>
+
+</html>

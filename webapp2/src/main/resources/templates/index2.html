@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head" />
+
+<body>
+	<div th:include="fragments :: header">?</div>
+
+	<div class="mainpane">
+
+		<h1 th:text="${j_counterparty_name}">?j_counterparty_name?</h1>
+		<h2 th:text="${j_counterparty_timestamp}">?j_counterparty_timestamp?</h2>
+
+		<h2>Trades :</h2>
+		<h4 th:text="${j_elapsed}">?j_elapsed?</h4>
+		 
+		<div th:if="${data.isEmpty()}">
+			<h3>None</h3>
+		</div>
+		
+		<table th:unless="${data.isEmpty()}" class="myData">
+			<tr>
+				<th>Trades since timestamp</th>
+			</tr>
+			<tr th:each="datum : ${data}">
+				<td th:text="${datum}"/>
+			</tr>
+		</table>
+		</div>
+
+	</div>
+
+	<div th:include="fragments :: footer">?</div>
+</body>
+
+</html>

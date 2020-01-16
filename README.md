@@ -62,3 +62,16 @@ java -jar webapp/target/webapp-1.0-SNAPSHOT.jar
 ```
 
 Browse to localhost:9000 to see the dashboard.
+java -jar trade-producer/target/trade-producer-1.0-SNAPSHOT.jar 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094 300
+java -jar jet-server/target/jet-server-1.0-SNAPSHOT.jar
+java -jar trade-queries/target/trade-queries-1.0-SNAPSHOT.jar load-symbols
+java -jar trade-queries/target/trade-queries-1.0-SNAPSHOT.jar ingest-trades 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
+java -jar trade-queries/target/trade-queries-1.0-SNAPSHOT.jar aggregate-query  127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
+java -jar webapp/target/webapp-1.0-SNAPSHOT.jar 
+MY_CLUSTER_IP=`ifconfig | grep inet | grep -v inet6 | grep -v 127.0.0.1 | cut -d" " -f2`
+docker run -it --rm -p 9001:9000 -e KAFKA_BROKERCONNECT=$MY_CLUSTER_IP:9092,$MY_CLUSTER_IP:9093,$MY_CLUSTER_IP:9094 obsidiandynamics/kafdrop 
+echo kafdrop is http://localhost:9001
+java -jar trade-queries/target/trade-queries-1.0-SNAPSHOT.jar counterparty-volume 127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094
+java -jar webapp2/target/webapp2-1.0-SNAPSHOT.jar 
+java -jar webappx/target/webappx-1.0-SNAPSHOT.jar
+java -jar trade-queries/target/trade-queries-1.0-SNAPSHOT.jar excel-export

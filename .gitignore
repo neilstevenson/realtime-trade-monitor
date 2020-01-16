@@ -28,3 +28,9 @@ src/main/app/node_modules/*
 dependency-reduced-pom.xml
 .idea
 target
+hot-restart
+
+# Eclipse
+.classpath
+.project
+.settings

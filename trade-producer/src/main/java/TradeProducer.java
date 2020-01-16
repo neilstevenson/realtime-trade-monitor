@@ -5,6 +5,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -25,6 +26,7 @@ public class TradeProducer {
     private final int rate;
     private final Map<String, Integer> symbolToPrice;
     private final KafkaProducer<String, String> producer;
+    private final List<String> counterparties;
     private final List<String> symbols;
 
     private long emitSchedule;
@@ -41,12 +43,13 @@ public class TradeProducer {
         props.setProperty("key.serializer", StringSerializer.class.getName());
         props.setProperty("value.serializer", StringSerializer.class.getName());
 
-        new TradeProducer(props, rate, loadSymbols()).run();
+        new TradeProducer(props, rate, loadSymbols(), loadCounterparties()).run();
     }
 
-    private TradeProducer(Properties props, int rate, List<String> symbols) {
+    private TradeProducer(Properties props, int rate, List<String> symbols, List<String> counterparties) {
         this.rate = rate;
         this.symbols = symbols;
+        this.counterparties = counterparties;
         this.symbolToPrice = symbols.stream().collect(Collectors.toMap(t -> t, t -> 2500));
         this.producer = new KafkaProducer<>(props);
         this.emitSchedule = System.nanoTime();
@@ -62,6 +65,7 @@ public class TradeProducer {
                     break;
                 }
                 String symbol = symbols.get(rnd.nextInt(symbols.size()));
+                String counterparty = counterparties.get(rnd.nextInt(counterparties.size()));
                 int price = symbolToPrice.compute(symbol, (t, v) -> v + rnd.nextInt(-1, 2));
                 String id = UUID.randomUUID().toString();
                 String tradeLine = String.format("{" +
@@ -69,13 +73,15 @@ public class TradeProducer {
                                 "\"timestamp\": %d," +
                                 "\"symbol\": \"%s\"," +
                                 "\"price\": %d," +
-                                "\"quantity\": %d" +
+                                "\"quantity\": %d," +
+                                "\"counterparty\": \"%s\"" +
                                 "}",
                         id,
                         System.currentTimeMillis(),
                         symbol,
                         price,
-                        rnd.nextInt(10, QUANTITY)
+                        rnd.nextInt(10, QUANTITY),
+                        counterparty
                 );
                 producer.send(new ProducerRecord<>(TOPIC, id, tradeLine));
                 emitSchedule += interval;
@@ -96,4 +102,9 @@ public class TradeProducer {
             throw new RuntimeException(e);
         }
     }
+
+    private static List<String> loadCounterparties() {
+    	return Arrays.asList(CentralCounterParty.NAMES);
+    }
+
 }

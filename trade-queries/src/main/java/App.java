@@ -11,6 +11,8 @@ public class App {
             System.out.println(" aggregate-query <bootstrap servers>");
             System.out.println(" benchmark-index");
             System.out.println(" benchmark-latency");
+            System.out.println(" counterparty-volume <bootstrap servers>");
+            System.out.println(" excel-export");
             System.exit(1);
         }
 
@@ -28,6 +30,10 @@ public class App {
                 Benchmark.benchmark(jet);
             } else if (command.equals("benchmark-latency")) {
                 BenchmarkLatency.benchmark(jet);
+            } else if (command.equals("counterparty-volume")) {
+                CounterpartyVolume.cpvQuery(jet, args[1]);
+            } else if (command.equals("excel-export")) {
+                ExcelExport.excelExport(jet);
             }
         } finally {
             jet.shutdown();

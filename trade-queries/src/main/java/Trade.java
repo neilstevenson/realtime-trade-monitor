@@ -17,11 +17,13 @@
 import java.io.Serializable;
 import java.util.Objects;
 
+@SuppressWarnings("serial")
 public class Trade implements Serializable {
 
     private String id;
     private long timestamp;
     private String symbol;
+    private String counterparty;
     private int quantity;
     private int price; // in cents
 
@@ -75,7 +77,7 @@ public class Trade implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s %d %s %d %d", id, timestamp, symbol, quantity, price);
+        return String.format("%s %d %s %s %d %d", id, timestamp, symbol, counterparty, quantity, price);
     }
 
 
@@ -96,12 +98,21 @@ public class Trade implements Serializable {
                 quantity == trade.quantity &&
                 price == trade.price &&
                 Objects.equals(id, trade.id) &&
-                Objects.equals(symbol, trade.symbol);
+                Objects.equals(symbol, trade.symbol) &&
+        		Objects.equals(counterparty, trade.counterparty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, timestamp, symbol, quantity, price);
+        return Objects.hash(id, timestamp, symbol, counterparty, quantity, price);
     }
+
+	public String getCounterparty() {
+		return counterparty;
+	}
+
+	public void setCounterparty(String counterparty) {
+		this.counterparty = counterparty;
+	}
 
 }

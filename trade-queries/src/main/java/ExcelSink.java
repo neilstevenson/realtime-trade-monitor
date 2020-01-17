@@ -23,7 +23,7 @@ import com.hazelcast.jet.pipeline.SinkBuilder;
 // https://www.baeldung.com/java-microsoft-excel
 public class ExcelSink {
 
-	public static Sink<? super Entry<String, Tuple3<Long, Long, Integer>>> buildExcelSink(long timestamp) {
+	public static Sink<? super Entry<String, Tuple3<Long, Long, Long>>> buildExcelSink(long timestamp) {
 		
 		Instant instant = Instant.ofEpochMilli(timestamp);
 		LocalDateTime localDateTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -59,7 +59,7 @@ public class ExcelSink {
 					Cell headerCell1 = header.createCell(1);
 					Cell headerCell2 = header.createCell(2);
 					Cell headerCell3 = header.createCell(3);
-					headerCell0.setCellValue("Stock");
+					headerCell0.setCellValue("Counterparty");
 					headerCell1.setCellValue("Count");
 					headerCell2.setCellValue("Sum");
 					headerCell3.setCellValue("Latest");
@@ -70,7 +70,7 @@ public class ExcelSink {
 					
 					return workbook;
 				})
-				.receiveFn((Workbook workbook, Entry<String, Tuple3<Long, Long, Integer>> entry) -> {
+				.receiveFn((Workbook workbook, Entry<String, Tuple3<Long, Long, Long>> entry) -> {
 					 
 					Sheet sheet = workbook.getSheetAt(0);
 

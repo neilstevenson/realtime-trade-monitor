@@ -31,7 +31,7 @@ public class ExcelExport {
         long now = System.currentTimeMillis();
 
         BatchStage<Entry<String, Tuple3<Long, Long, Long>>> source =
-        		p.drawFrom(Sources.map("query2_Results"));
+        		p.drawFrom(Sources.map("counterparty"));
 
         source.drainTo(ExcelSink.buildExcelSink(now));
 

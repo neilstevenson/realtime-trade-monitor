@@ -12,11 +12,14 @@ import com.hazelcast.jet.kafka.KafkaSources;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sinks;
 import com.hazelcast.jet.pipeline.StreamStage;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.UUID;
 
 import static com.hazelcast.jet.aggregate.AggregateOperations.allOf;
 import static com.hazelcast.jet.aggregate.AggregateOperations.counting;
@@ -48,8 +51,7 @@ public class CounterpartyVolume {
         StreamStage<Trade> source =
                 p.drawFrom(KafkaSources.<String, Trade, Trade>kafka(kafkaSourceProps(servers),
                         ConsumerRecord::value, TOPIC))
-                 .withoutTimestamps();
-
+                 .withoutTimestamps();        
 
 		StreamStage<Entry<String, Tuple3<Long, Long, Long>>> aggregated =
                 source
@@ -72,6 +74,7 @@ public class CounterpartyVolume {
         Properties props = new Properties();
         props.setProperty("auto.offset.reset", "earliest");
         props.setProperty("bootstrap.servers", servers);
+        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
         props.setProperty("key.deserializer", StringDeserializer.class.getName());
         props.setProperty("value.deserializer", TradeJsonDeserializer.class.getName());
         return props;
